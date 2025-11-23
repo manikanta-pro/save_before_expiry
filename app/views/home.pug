@@ -1,5 +1,39 @@
 extends layout
 
 block content
-  h1 Home
-  p Welcome to Save Before Expiry.
+  section.hero
+    .hero-text
+      h2 Discover Near-Expiry Deals & Save More
+      p Fresh products at amazing discounts, available near you.
+      a.btn-primary(href="/search") Start Exploring
+    .hero-image
+      img(src="./hero.avif", alt="Save Before Expiry app hero")
+
+  section.features
+    h2 Features
+    .feature-list
+      .feature-box
+        img(src="./icons/location.png", alt="Location Icon")
+        h3 Location Based Deals
+        p Find discounted food items available close to you.
+      .feature-box
+        img(src="./icons/clock.png", alt="Expiry Icon")
+        h3 Expiry Countdown
+        p Track time left before items expire and grab them quickly.
+      .feature-box
+        img(src="./icons/save.png", alt="Save Icon")
+        h3 Save & Favourite
+        p Save your favourite deals for quick access anytime.
+
+  section.reviews
+    h2 Customer Reviews
+    .review-list
+      .review-box
+        p "Amazing app! Saved lots of money on groceries."
+        span - Kajal A.
+      .review-box
+        p "Very helpful in reducing food waste and finding deals."
+        span - David P.
+      .review-box
+        p "Easy to use and shows nearby offers instantly!"
+        span - Rishi V.

@@ -1,8 +1,20 @@
 doctype html
-html
+html(lang="en")
   head
-    meta(charset="utf-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1")
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title= title || "Save Before Expiry"
+    link(rel="stylesheet", href="./styles.css")
   body
-    block content
+    header.header
+      h1.logo Save Before Expiry
+      nav.navbar
+        ul
+          li: a(href="/") Home
+          li: a(href="/about") About
+          li: a(href="/contactus") Contact Us
+          li: a(href="/login") Login
+    main
+      block content
+    footer.footer
+      p © 2025 Save Before Expiry. All rights reserved.
