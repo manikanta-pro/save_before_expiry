@@ -25,6 +25,11 @@ app.get("/about", function(req, res) {
     res.render("about", { title: "About" });
 });
 
+// Contact page
+app.get("/contact", function(req, res) {
+    res.render("contact", { title: "Contact" });
+});
+
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database

@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  section.hero
+    .hero-text
+      h2 Contact Us
+      p Have a question, partnership idea, or feedback? We’d love to hear from you.
+      a.btn-primary(href="mailto:hello@savebeforeexpiry.com") Email Us
+    .hero-image
+      img(src="./contact.jpg", alt="Team ready to help")
+
+  section.features
+    h2 Get in Touch
+    .feature-list
+      .feature-box
+        h3 Partnerships
+        p partner@savebeforeexpiry.com
+      .feature-box
+        h3 Support
+        p support@savebeforeexpiry.com
+      .feature-box
+        h3 Press
+        p press@savebeforeexpiry.com
+
+  section.reviews
+    h2 Send a Message
+    form.contact-form(action="/contact", method="post")
+      .form-row
+        label(for="name") Name
+        input#name(type="text", name="name", placeholder="Your name", required)
+      .form-row
+        label(for="email") Email
+        input#email(type="email", name="email", placeholder="you@example.com", required)
+      .form-row
+        label(for="message") Message
+        textarea#message(name="message", rows="4", placeholder="How can we help?", required)
+      button.btn-primary(type="submit") Send Message

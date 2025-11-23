@@ -105,6 +105,50 @@ footer.footer {
   font-size: 14px;
 }
 
+.contact-form {
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.1);
+  display: grid;
+  gap: 16px;
+}
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.form-row label {
+  font-weight: 600;
+  color: #0f172a;
+}
+.form-row input,
+.form-row textarea {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 15px;
+  color: #0f172a;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.form-row input:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  background: #fff;
+}
+.contact-form button.btn-primary {
+  width: fit-content;
+  border: none;
+  cursor: pointer;
+}
+.contact-form button.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.35);
+}
+
 @media (max-width: 640px) {
   header.header { flex-direction: column; gap: 12px; align-items: flex-start; }
   .navbar ul { flex-wrap: wrap; gap: 10px; }
