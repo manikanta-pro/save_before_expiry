@@ -20,6 +20,11 @@ app.get("/", function(req, res) {
     res.render("home", { title: "Home" });
 });
 
+// About page
+app.get("/about", function(req, res) {
+    res.render("about", { title: "About" });
+});
+
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database
