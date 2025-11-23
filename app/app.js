@@ -1,8 +1,13 @@
 // Import express.js
 const express = require("express");
+const path = require("path");
 
 // Create express app
 var app = express();
+
+// Set Pug as the view engine
+app.set("views", "./app/views");
+app.set("view engine", "pug");
 
 // Add static files location
 app.use(express.static("static"));
@@ -12,7 +17,7 @@ const db = require('./services/db');
 
 // Create a route for root - /
 app.get("/", function(req, res) {
-    res.send("Hello world!");
+    res.render("home", { title: "Home" });
 });
 
 // Create a route for testing the db
