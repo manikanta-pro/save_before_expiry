@@ -52,6 +52,8 @@ app.get("/dashboard", async function(req, res) {
                 location,
                 DATE_FORMAT(expiry_date, '%Y-%m-%d') AS expiry_date,
                 quantity,
+                original_price,
+                ROUND(original_price * (1 - (discount_percent/100)), 2) AS discounted_price,
                 discount_percent,
                 status
             FROM inventory_items

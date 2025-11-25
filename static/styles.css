@@ -26,6 +26,11 @@ header.header {
   margin: 0;
   padding: 0;
 }
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .navbar a {
   padding: 8px 10px;
   border-radius: 8px;
@@ -34,6 +39,20 @@ header.header {
 .navbar a:hover {
   background: rgba(255,255,255,0.1);
   color: #c7d2fe;
+}
+.btn-logout {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+  transform: translateY(-1px);
 }
 
 main { padding: 40px 24px 64px; max-width: 1080px; margin: 0 auto; }

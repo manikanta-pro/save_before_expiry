@@ -53,6 +53,7 @@ CREATE TABLE `inventory_items` (
   `location` varchar(160) NOT NULL,
   `expiry_date` date NOT NULL,
   `quantity` int NOT NULL DEFAULT '0',
+  `original_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `discount_percent` decimal(5,2) NOT NULL DEFAULT '0.00',
   `status` enum('available','reserved','claimed','expired') NOT NULL DEFAULT 'available',
   `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -62,13 +63,13 @@ CREATE TABLE `inventory_items` (
 -- Dumping data for table `inventory_items`
 --
 
-INSERT INTO `inventory_items` (`id`, `product_name`, `category`, `location`, `expiry_date`, `quantity`, `discount_percent`, `status`, `last_updated`) VALUES
-(1, 'Sourdough Loaf', 'Bakery', 'Brooklyn Fresh Mart', '2025-05-02', 12, '35.00', 'available', '2025-05-01 07:30:00'),
-(2, 'Organic Spinach Box', 'Produce', 'Queens Green Grocers', '2025-05-03', 20, '45.00', 'reserved', '2025-05-01 07:40:00'),
-(3, 'Greek Yogurt (6 pack)', 'Dairy', 'Harlem Pantry Co.', '2025-05-06', 16, '50.00', 'available', '2025-05-01 07:45:00'),
-(4, 'Free-range Eggs (12)', 'Dairy', 'Astoria Co-op', '2025-05-01', 10, '40.00', 'claimed', '2025-05-01 07:50:00'),
-(5, 'Veggie Burrito Bowls', 'Prepared Meals', 'Downtown Deli Hub', '2025-05-04', 18, '30.00', 'available', '2025-05-01 07:55:00'),
-(6, 'Cold Brew Growler', 'Beverages', 'SoHo Coffee Collective', '2025-05-05', 8, '25.00', 'reserved', '2025-05-01 08:00:00');
+INSERT INTO `inventory_items` (`id`, `product_name`, `category`, `location`, `expiry_date`, `quantity`, `original_price`, `discount_percent`, `status`, `last_updated`) VALUES
+(1, 'Sourdough Loaf', 'Bakery', 'Brooklyn Fresh Mart', '2025-05-02', 12, 6.50, '35.00', 'available', '2025-05-01 07:30:00'),
+(2, 'Organic Spinach Box', 'Produce', 'Queens Green Grocers', '2025-05-03', 20, 4.20, '45.00', 'reserved', '2025-05-01 07:40:00'),
+(3, 'Greek Yogurt (6 pack)', 'Dairy', 'Harlem Pantry Co.', '2025-05-06', 16, 9.50, '50.00', 'available', '2025-05-01 07:45:00'),
+(4, 'Free-range Eggs (12)', 'Dairy', 'Astoria Co-op', '2025-05-01', 10, 5.80, '40.00', 'claimed', '2025-05-01 07:50:00'),
+(5, 'Veggie Burrito Bowls', 'Prepared Meals', 'Downtown Deli Hub', '2025-05-04', 18, 7.25, '30.00', 'available', '2025-05-01 07:55:00'),
+(6, 'Cold Brew Growler', 'Beverages', 'SoHo Coffee Collective', '2025-05-05', 8, 11.00, '25.00', 'reserved', '2025-05-01 08:00:00');
 
 --
 -- Indexes for dumped tables

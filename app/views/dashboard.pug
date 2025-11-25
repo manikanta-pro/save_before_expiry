@@ -1,4 +1,4 @@
-extends layout
+extends dashboard-layout
 
 block content
   section.dashboard-hero
@@ -43,6 +43,8 @@ block content
             th Location
             th Expiry
             th Qty
+            th Original
+            th Discounted
             th Discount
             th Status
         tbody
@@ -54,6 +56,8 @@ block content
               td= item.location
               td= item.expiry_date
               td= item.quantity
+              td £#{item.original_price}
+              td £#{item.discounted_price}
               td #{item.discount_percent}%
               td
                 span.status-pill(class=`status-${item.status}`)= item.status
