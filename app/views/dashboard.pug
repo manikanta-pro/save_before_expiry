@@ -1,0 +1,61 @@
+extends layout
+
+block content
+  section.dashboard-hero
+    .hero-text
+      h2 Inventory Dashboard
+      p A quick health check on near-expiry stock, discounts, and pickup hotspots.
+      .hero-actions
+        a.btn-primary(href="/about") Learn How It Works
+    .hero-highlight
+      span.label Expiring in 3 days
+      span.value #{summary.expiringSoon || 0}
+      p.subtext Items to spotlight before they go to waste.
+
+  section.metrics
+    h2 Inventory Pulse
+    .metric-grid
+      .metric-card
+        span.label Total Items
+        span.number #{summary.totalItems || 0}
+        span.helper Live deals tracked across locations.
+      .metric-card
+        span.label Ready to Claim
+        span.number #{summary.availableItems || 0}
+        span.helper Available to shoppers now.
+      .metric-card
+        span.label Reserved
+        span.number #{summary.reservedItems || 0}
+        span.helper Held for recent orders.
+      .metric-card
+        span.label Claimed / Cleared
+        span.number #{(summary.claimedItems || 0) + (summary.expiredItems || 0)}
+        span.helper Picked up or marked expired.
+
+  section.table-section
+    h2 Expiring Soonest
+    if expiringItems && expiringItems.length
+      table.data-table
+        thead
+          tr
+            th Product
+            th Category
+            th Location
+            th Expiry
+            th Qty
+            th Discount
+            th Status
+        tbody
+          each item in expiringItems
+            tr
+              td
+                strong= item.product_name
+              td= item.category || '—'
+              td= item.location
+              td= item.expiry_date
+              td= item.quantity
+              td #{item.discount_percent}%
+              td
+                span.status-pill(class=`status-${item.status}`)= item.status
+    else
+      p.no-data No items found yet. Seed the inventory table to see activity.

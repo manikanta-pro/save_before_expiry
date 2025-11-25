@@ -30,6 +30,51 @@ app.get("/contact", function(req, res) {
     res.render("contact", { title: "Contact" });
 });
 
+// Dashboard page with inventory insights
+app.get("/dashboard", async function(req, res) {
+    try {
+        const summarySql = `
+            SELECT
+                COUNT(*) AS totalItems,
+                SUM(CASE WHEN status = 'available' THEN 1 ELSE 0 END) AS availableItems,
+                SUM(CASE WHEN status = 'reserved' THEN 1 ELSE 0 END) AS reservedItems,
+                SUM(CASE WHEN status = 'claimed' THEN 1 ELSE 0 END) AS claimedItems,
+                SUM(CASE WHEN status = 'expired' THEN 1 ELSE 0 END) AS expiredItems,
+                SUM(CASE WHEN expiry_date <= DATE_ADD(CURDATE(), INTERVAL 3 DAY) THEN 1 ELSE 0 END) AS expiringSoon
+            FROM inventory_items;
+        `;
+
+        const expiringItemsSql = `
+            SELECT
+                id,
+                product_name,
+                category,
+                location,
+                DATE_FORMAT(expiry_date, '%Y-%m-%d') AS expiry_date,
+                quantity,
+                discount_percent,
+                status
+            FROM inventory_items
+            ORDER BY expiry_date ASC
+            LIMIT 8;
+        `;
+
+        const [summaryRows, expiringItems] = await Promise.all([
+            db.query(summarySql),
+            db.query(expiringItemsSql)
+        ]);
+
+        res.render("dashboard", {
+            title: "Dashboard",
+            summary: summaryRows[0] || {},
+            expiringItems
+        });
+    } catch (err) {
+        console.error("Error loading dashboard", err);
+        res.status(500).send("Unable to load dashboard right now.");
+    }
+});
+
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database
