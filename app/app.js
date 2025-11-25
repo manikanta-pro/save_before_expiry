@@ -209,6 +209,11 @@ app.get("/goodbye", function(req, res) {
     res.send("Goodbye world!");
 });
 
+// Logout (no auth yet) -> simply return to home
+app.get("/logout", function(req, res) {
+    res.redirect("/");
+});
+
 // Create a dynamic route for /hello/<name>, where name is any value provided by user
 // At the end of the URL
 // Responds to a 'GET' request
