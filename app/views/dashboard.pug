@@ -51,7 +51,8 @@ block content
           each item in expiringItems
             tr
               td
-                strong= item.product_name
+                a.product-link(href=`/products/${item.id}`)
+                  strong= item.product_name
               td= item.category || '—'
               td= item.location
               td= item.expiry_date

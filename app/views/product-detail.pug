@@ -1,0 +1,75 @@
+extends dashboard-layout
+
+block content
+  - const days = product.days_to_expiry;
+  - let expiryLabel;
+  - if (days > 1) { expiryLabel = `${days} days left`; }
+  - else if (days === 1) { expiryLabel = 'Expires tomorrow'; }
+  - else if (days === 0) { expiryLabel = 'Expires today'; }
+  - else { expiryLabel = 'Expired'; }
+
+  section.product-detail-hero
+    .hero-left
+      .chip-row
+        span.status-pill(class=`status-${product.status || 'available'}`)= product.status
+        span.expiry-chip #{expiryLabel} · #{product.expiry_date}
+      h2= product.product_name
+      p.lead-text= product.category ? `${product.category} · Available at ${product.location}` : `Available at ${product.location}`
+      .meta-grid
+        .meta-card
+          span.label Pickup location
+          strong= product.location
+          span.helper Same-day holds available
+        .meta-card
+          span.label Quantity left
+          strong= product.quantity
+          span.helper First come, first served
+        .meta-card
+          span.label Expiry date
+          strong= product.expiry_date
+          span.helper Freshness verified by store
+    .hero-right
+      .price-card
+        span.label Special price
+        .price-row
+          span.discounted £#{product.discounted_price}
+          span.original £#{product.original_price}
+          span.discount-tag -#{product.discount_percent}%
+        p.helper Reserve now and pick up before closing time.
+        .cta-row
+          a.btn-primary(href="/contact") Reserve for pickup
+          a.btn-ghost(href="/dashboard") Back to deals
+      ul.freshness-points
+        li Ready for pickup within 2 hours of reservation.
+        li Temperature-controlled holding for chilled items.
+        li Friendly reminder before expiry.
+
+  section.product-details
+    h3 Freshness & pickup details
+    .detail-grid
+      .detail-card
+        h4 Why it’s discounted
+        p This item is approaching its expiry date but remains store-quality. Grab it early and save more.
+      .detail-card
+        h4 Storage notes
+        p Keep refrigerated and consume within 24 hours of pickup for best taste.
+      .detail-card
+        h4 Cancellation policy
+        p Holds last 2 hours. If unclaimed, it returns to the shelf for the next shopper.
+
+  section.recommendations
+    h3 More in this category
+    if recommendedItems && recommendedItems.length
+      .recommendation-grid
+        each item in recommendedItems
+          a.reco-card(href=`/products/${item.id}`)
+            .reco-top
+              span.category= item.category || '—'
+              span.status-pill(class=`status-${item.status}`)= item.status
+            h4= item.product_name
+            p.small Expires on #{item.expiry_date}
+            .reco-price
+              span.discounted £#{item.discounted_price}
+              span.discount-tag -#{item.discount_percent}%
+    else
+      p.no-data Nothing else in this category yet—check the dashboard for more deals.

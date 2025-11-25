@@ -77,6 +77,89 @@ app.get("/dashboard", async function(req, res) {
     }
 });
 
+// Product detail page
+app.get("/products/:id", async function(req, res) {
+    const productId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(productId)) {
+        return res.status(400).send("Invalid product id");
+    }
+
+    try {
+        const productSql = `
+            SELECT
+                id,
+                product_name,
+                category,
+                location,
+                DATE_FORMAT(expiry_date, '%Y-%m-%d') AS expiry_date,
+                quantity,
+                original_price,
+                discount_percent,
+                ROUND(original_price * (1 - (discount_percent/100)), 2) AS discounted_price,
+                status,
+                DATEDIFF(expiry_date, CURDATE()) AS days_to_expiry
+            FROM inventory_items
+            WHERE id = ?
+            LIMIT 1;
+        `;
+
+        const [product] = await db.query(productSql, [productId]);
+
+        if (!product) {
+            return res.status(404).send("Product not found");
+        }
+
+        const recommendationsSql = `
+            SELECT
+                id,
+                product_name,
+                category,
+                location,
+                DATE_FORMAT(expiry_date, '%Y-%m-%d') AS expiry_date,
+                ROUND(original_price * (1 - (discount_percent/100)), 2) AS discounted_price,
+                discount_percent,
+                status
+            FROM inventory_items
+            WHERE category = ?
+              AND id != ?
+            ORDER BY expiry_date ASC
+            LIMIT 3;
+        `;
+
+        let recommendedItems = await db.query(recommendationsSql, [product.category, productId]);
+
+        // If no category matches, fall back to the soonest-to-expire items.
+        if (!recommendedItems.length) {
+            const fallbackSql = `
+                SELECT
+                    id,
+                    product_name,
+                    category,
+                    location,
+                    DATE_FORMAT(expiry_date, '%Y-%m-%d') AS expiry_date,
+                    ROUND(original_price * (1 - (discount_percent/100)), 2) AS discounted_price,
+                    discount_percent,
+                    status
+                FROM inventory_items
+                WHERE id != ?
+                ORDER BY expiry_date ASC
+                LIMIT 3;
+            `;
+            recommendedItems = await db.query(fallbackSql, [productId]);
+        }
+
+        res.render("product-detail", {
+            title: product.product_name,
+            product,
+            recommendedItems
+        });
+    } catch (err) {
+        console.error("Error loading product detail", err);
+        res.status(500).send("Unable to load product details right now.");
+    }
+});
+
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database
