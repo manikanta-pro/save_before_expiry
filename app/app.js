@@ -33,6 +33,28 @@ app.get("/contact", function(req, res) {
 // Dashboard page with inventory insights
 app.get("/dashboard", async function(req, res) {
     try {
+        const { search = "", status = "", category = "" } = req.query;
+
+        const filters = [];
+        const params = [];
+
+        if (search) {
+            filters.push("(product_name LIKE ? OR location LIKE ?)");
+            params.push(`%${search}%`, `%${search}%`);
+        }
+
+        if (status) {
+            filters.push("status = ?");
+            params.push(status);
+        }
+
+        if (category) {
+            filters.push("category = ?");
+            params.push(category);
+        }
+
+        const whereClause = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
+
         const summarySql = `
             SELECT
                 COUNT(*) AS totalItems,
@@ -57,19 +79,30 @@ app.get("/dashboard", async function(req, res) {
                 discount_percent,
                 status
             FROM inventory_items
+            ${whereClause}
             ORDER BY expiry_date ASC
-            LIMIT 8;
+            LIMIT 20;
         `;
 
-        const [summaryRows, expiringItems] = await Promise.all([
+        const categoriesSql = `
+            SELECT DISTINCT category
+            FROM inventory_items
+            WHERE category IS NOT NULL
+            ORDER BY category ASC;
+        `;
+
+        const [summaryRows, expiringItems, categories] = await Promise.all([
             db.query(summarySql),
-            db.query(expiringItemsSql)
+            db.query(expiringItemsSql, params),
+            db.query(categoriesSql)
         ]);
 
         res.render("dashboard", {
             title: "Dashboard",
             summary: summaryRows[0] || {},
-            expiringItems
+            expiringItems,
+            filters: { search, status, category },
+            categories
         });
     } catch (err) {
         console.error("Error loading dashboard", err);

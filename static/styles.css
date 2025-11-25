@@ -306,6 +306,50 @@ footer.footer {
   text-decoration: underline;
 }
 
+.filters {
+  margin: 32px 0 10px;
+}
+.filter-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  align-items: end;
+  background: #fff;
+  padding: 14px 16px;
+  border-radius: 12px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.filter-group label {
+  font-weight: 700;
+  color: #0f172a;
+}
+.filter-group input,
+.filter-group select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #0f172a;
+}
+.filter-group input:focus,
+.filter-group select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  background: #fff;
+}
+.filter-form .btn-primary,
+.filter-form .btn-ghost {
+  margin-top: 4px;
+}
+
 .product-detail-hero {
   display: grid;
   grid-template-columns: 1.4fr 1fr;

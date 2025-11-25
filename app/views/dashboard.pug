@@ -12,6 +12,30 @@ block content
       span.value #{summary.expiringSoon || 0}
       p.subtext Items to spotlight before they go to waste.
 
+  section.filters
+    form.filter-form(method="get", action="/dashboard")
+      .filter-group
+        label(for="search") Search
+        input#search(type="text", name="search", placeholder="Product or location", value=(filters && filters.search) || "")
+      .filter-group
+        label(for="category") Category
+        select#category(name="category")
+          option(value="") All categories
+          if categories && categories.length
+            each cat in categories
+              option(value=cat.category selected=(filters && filters.category === cat.category) ? true : undefined)= cat.category
+      .filter-group
+        label(for="status") Status
+        select#status(name="status")
+          option(value="") All statuses
+          option(value="available" selected=filters && filters.status === "available") Available
+          option(value="reserved" selected=filters && filters.status === "reserved") Reserved
+          option(value="claimed" selected=filters && filters.status === "claimed") Claimed
+          option(value="expired" selected=filters && filters.status === "expired") Expired
+      button.btn-primary(type="submit") Apply filters
+      if filters && (filters.search || filters.category || filters.status)
+        a.btn-ghost(href="/dashboard") Clear
+
   section.metrics
     h2 Inventory Pulse
     .metric-grid
