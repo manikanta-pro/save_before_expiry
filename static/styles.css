@@ -347,6 +347,7 @@ footer.footer {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .meta-card .label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 6px; }
+.meta-card strong { display: block; margin-bottom: 6px; letter-spacing: 0.2px; }
 .meta-card .helper { color: #c7d2fe; font-size: 13px; }
 
 .hero-right {
