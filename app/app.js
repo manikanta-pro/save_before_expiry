@@ -1,6 +1,10 @@
 // Import express.js
 const express = require("express");
 const path = require("path");
+const session = require("express-session");
+const { User } = require("./models/user");
+const db = require('./services/db');
+const bcrypt = require("bcryptjs");
 
 // Create express app
 var app = express();
@@ -14,10 +18,32 @@ app.use(express.static("static"));
 
 // Get the functions in the db.js file to use
 const db = require('./services/db');
+// Body parser
+app.use(express.urlencoded({ extended: true }));
 
+// Session config
+const oneHour = 60 * 60 * 1000;
+app.use(session({
+  secret: "secretkeysdfjsflyoifasd",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    maxAge: oneHour
+  }
+}));
+
+// Routes
+app.get("/", (req, res) => {
+  if (req.session.uid) {
+    res.send("Welcome back, " + req.session.uid + "!");
+  } else {
+    res.render("login", { loggedIn: req.session.loggedIn });
+  }
+});
 // Create a route for root - /
 app.get("/", function(req, res) {
-    res.render("home", { title: "Home" });
+    
 });
 
 // About page
@@ -28,6 +54,62 @@ app.get("/about", function(req, res) {
 // Contact page
 app.get("/contact", function(req, res) {
     res.render("contact", { title: "Contact" });
+});
+
+// Register or Set Password
+app.post("/set-password", async (req, res) => {
+  const { email, password, businessName, forename, surname, contactNumber } = req.body;
+  const user = new User(email);
+  user.businessName = businessName;
+  user.forename = forename;
+  user.surname = surname;
+  user.contactNumber = contactNumber;
+
+  try {
+    const uId = await user.getIdFromEmail();
+    if (uId) {
+      await user.setUserPassword(password);
+      res.render("register", { successMessage: "Password updated", loggedIn: req.session.loggedIn });
+    } else {
+      const newId = await user.addUser(password);
+      res.render("register", { successMessage: "Account created", loggedIn: req.session.loggedIn });
+    }
+  } catch (err) {
+    console.error("Error in set-password:", err.message);
+    res.render("register", { errorMessage: "An error occurred", loggedIn: req.session.loggedIn });
+  }
+});
+
+// Login authentication
+app.post("/authenticate", async (req, res) => {
+  const { email, password } = req.body;
+  const user = new User(email);
+
+  try {
+    const uId = await user.getIdFromEmail();
+    if (uId) {
+      const match = await user.authenticate(password);
+      if (match) {
+        req.session.uid = uId;
+        req.session.loggedIn = true;
+        res.redirect("/dashboard");
+      } else {
+        res.render("login", { errorMessage: "Invalid password" });
+      }
+    } else {
+      res.render("login", { errorMessage: "Email not found" });
+    }
+  } catch (err) {
+    console.error("Authentication error:", err.message);
+    res.render("login", { errorMessage: "Login failed" });
+  }
+});
+
+// Logout
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
 });
 
 // Dashboard page with inventory insights

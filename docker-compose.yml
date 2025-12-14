@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   web:
-    container_name: save-before-expiry-web
+    container_name: save-before-expiry1-web
     build:
       context: ./
     volumes:
@@ -17,7 +17,7 @@ services:
       db:
         condition: service_healthy
   db:
-    container_name: save-before-expiry-db
+    container_name: save-before-expiry1-db
     image: mysql
     restart: always
     env_file:
@@ -32,7 +32,7 @@ services:
       timeout: 5s
       retries: 6
   phpmyadmin:
-    container_name: save-before-expiry-phpmyadmin
+    container_name: save-before-expiry1-phpmyadmin
     image: phpmyadmin/phpmyadmin:latest
     restart: always
     env_file:
