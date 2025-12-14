@@ -41,6 +41,20 @@ INSERT INTO `test_table` (`id`, `name`) VALUES
 (2, 'Kimia');
 
 -- --------------------------------------------------------
+CREATE TABLE Users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+
+    businessName VARCHAR(255),
+    forename VARCHAR(100) NOT NULL,
+    surname VARCHAR(100) NOT NULL,
+    contactNumber VARCHAR(20),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 --
 -- Table structure for table `inventory_items`

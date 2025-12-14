@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  section.auth-section
+    .auth-container
+      h2 Login to Your Account
+      p.subtitle Access your dashboard and manage near-expiry deals.
+
+      if errorMessage
+        p.error-msg= errorMessage
+
+      form.auth-form(action="/authenticate", method="post")
+        .form-group
+          label(for="email") Email Address
+          input#email(
+            type="email",
+            name="email",
+            placeholder="you@example.com",
+            required
+          )
+
+        .form-group
+          label(for="password") Password
+          input#password(
+            type="password",
+            name="password",
+            placeholder="Enter your password",
+            required
+          )
+
+        button.btn-primary(type="submit") Login
+
+      p.auth-footer
+        | Don’t have an account?
+        a(href="/signup")  Create one

@@ -1,0 +1,73 @@
+extends layout
+
+block content
+  section.auth-section
+    .auth-container
+      h2 Create an Account
+      p.subtitle Join us and start saving food before it expires.
+
+      if errorMessage
+        p.error-msg= errorMessage
+
+      if successMessage
+        p.success-msg= successMessage
+
+      form.auth-form(action="/set-password", method="post")
+        .form-group
+          label(for="businessName") Business Name
+          input#businessName(
+            type="text",
+            name="businessName",
+            placeholder="Store or Business name"
+          )
+
+        .form-row
+          .form-group
+            label(for="forename") First Name
+            input#forename(
+              type="text",
+              name="forename",
+              placeholder="First name",
+              required
+            )
+
+          .form-group
+            label(for="surname") Last Name
+            input#surname(
+              type="text",
+              name="surname",
+              placeholder="Last name",
+              required
+            )
+
+        .form-group
+          label(for="email") Email Address
+          input#email(
+            type="email",
+            name="email",
+            placeholder="you@example.com",
+            required
+          )
+
+        .form-group
+          label(for="contactNumber") Contact Number
+          input#contactNumber(
+            type="text",
+            name="contactNumber",
+            placeholder="+44 7xxxxxxx"
+          )
+
+        .form-group
+          label(for="password") Password
+          input#password(
+            type="password",
+            name="password",
+            placeholder="Create a strong password",
+            required
+          )
+
+        button.btn-primary(type="submit") Sign Up
+
+      p.auth-footer
+        | Already have an account?
+        a(href="/login")  Login here
