@@ -10,19 +10,22 @@ class Inventory {
   original_price;
   discount_percent;
   status;
+  created_by;
 
   constructor() {
     this.status = "available";
   }
 
   /**
-   * ADD inventory item (same style as addUser)
+   * ADD inventory item
+   * Linked to logged-in user via created_by
    */
   async addItem() {
     const sql = `
       INSERT INTO inventory_items
-      (product_name, category, location, expiry_date, quantity, original_price, discount_percent, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      (product_name, category, location, expiry_date, quantity,
+       original_price, discount_percent, status, created_by)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     try {
@@ -34,7 +37,8 @@ class Inventory {
         this.quantity,
         this.original_price,
         this.discount_percent,
-        this.status
+        this.status,
+        this.created_by // ✅ IMPORTANT
       ]);
 
       this.id = result.insertId;
@@ -46,7 +50,7 @@ class Inventory {
   }
 
   /**
-   * GET item by ID (same idea as getIdFromEmail)
+   * GET item by ID
    */
   static async getItemById(id) {
     const sql = "SELECT * FROM inventory_items WHERE id = ?";
