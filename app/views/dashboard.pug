@@ -24,7 +24,10 @@ block content
           option(value="") All categories
           if categories && categories.length
             each cat in categories
-              option(value=cat.category selected=(filters && filters.category === cat.category) ? true : undefined)= cat.category
+              option(
+                value=cat.category
+                selected=(filters && filters.category === cat.category) ? true : undefined
+              )= cat.category
       .filter-group
         label(for="status") Status
         select#status(name="status")
@@ -72,6 +75,7 @@ block content
             th Discounted
             th Discount
             th Status
+            th Actions
         tbody
           each item in expiringItems
             tr
@@ -87,5 +91,7 @@ block content
               td #{item.discount_percent}%
               td
                 span.status-pill(class=`status-${item.status}`)= item.status
+              td
+                a.btn-ghost(href=`/inventory/update/${item.id}`) Edit
     else
       p.no-data No items found yet. Seed the inventory table to see activity.

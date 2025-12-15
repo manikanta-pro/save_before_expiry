@@ -356,6 +356,79 @@ app.post("/inventory/create", async (req, res) => {
   }
 });
 
+// ==========================
+// Inventory Update (GET)
+// ==========================
+app.get("/inventory/update/:id", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect("/login");
+  }
+
+  const itemId = parseInt(req.params.id, 10);
+  if (isNaN(itemId)) {
+    return res.redirect("/dashboard");
+  }
+
+  try {
+    const item = await Inventory.getItemById(itemId);
+
+    if (!item) {
+      return res.redirect("/dashboard");
+    }
+
+    res.render("inventory-update", {
+      title: "Update Inventory Item",
+      item
+    });
+  } catch (err) {
+    console.error("Inventory update GET error:", err);
+    res.redirect("/dashboard");
+  }
+});
+
+// ==========================
+// Inventory Update (POST)
+// ==========================
+app.post("/inventory/update/:id", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect("/login");
+  }
+
+  const item = new Inventory();
+  item.id = parseInt(req.params.id, 10);
+
+  item.product_name = req.body.product_name;
+  item.category = req.body.category;
+  item.location = req.body.location;
+  item.expiry_date = req.body.expiry_date;
+  item.quantity = req.body.quantity;
+  item.original_price = req.body.original_price;
+  item.discount_percent = req.body.discount_percent;
+  item.status = req.body.status;
+
+  try {
+    const success = await item.updateItem();
+
+    if (success) {
+      res.redirect("/dashboard");
+    } else {
+      res.render("inventory-update", {
+        title: "Update Inventory Item",
+        item,
+        errorMessage: "Failed to update inventory item"
+      });
+    }
+  } catch (err) {
+    console.error("Inventory update POST error:", err);
+    res.render("inventory-update", {
+      title: "Update Inventory Item",
+      item,
+      errorMessage: "Something went wrong"
+    });
+  }
+});
+
+
 // Start server on port 3000
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);

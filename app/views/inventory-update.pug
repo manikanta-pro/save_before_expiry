@@ -1,0 +1,50 @@
+extends dashboard-layout
+
+block content
+  section.auth-page
+    .auth-card
+      .auth-header
+        h2 Update Inventory Item
+        p Modify product details before expiry
+
+      if errorMessage
+        .alert-error= errorMessage
+
+      form.auth-form(action=`/inventory/update/${item.id}`, method="post")
+        .input-group
+          label Product Name
+          input(type="text", name="product_name", required, value=item.product_name)
+
+        .input-group
+          label Category
+          input(type="text", name="category", value=item.category)
+
+        .input-group
+          label Location
+          input(type="text", name="location", required, value=item.location)
+
+        .input-group
+          label Expiry Date
+          input(type="date", name="expiry_date", required, value=item.expiry_date)
+
+        .input-group
+          label Quantity
+          input(type="number", name="quantity", min="1", required, value=item.quantity)
+
+        .input-group
+          label Original Price (£)
+          input(type="number", step="0.01", name="original_price", required, value=item.original_price)
+
+        .input-group
+          label Discount (%)
+          input(type="number", step="1", name="discount_percent", required, value=item.discount_percent)
+
+        .input-group
+          label Status
+          select(name="status")
+            option(value="available" selected=item.status==="available") Available
+            option(value="reserved" selected=item.status==="reserved") Reserved
+            option(value="claimed" selected=item.status==="claimed") Claimed
+            option(value="expired" selected=item.status==="expired") Expired
+
+        button.btn-primary.btn-full(type="submit") Update Item
