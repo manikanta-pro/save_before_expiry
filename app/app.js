@@ -7,6 +7,8 @@ const bcrypt = require("bcryptjs");
 
 const { User } = require("./models/user");
 const { Inventory } = require("./models/inventory");
+const { Contact } = require("./models/contact");
+
 const db = require("./services/db");
 
 const app = express();
@@ -268,6 +270,39 @@ app.post("/inventory/delete/:id", requireLogin, async (req, res) => {
   await Inventory.deleteItem(req.params.id);
   res.redirect("/dashboard");
 });
+
+
+// ==========================
+// CONTACT FORM SUBMISSION
+// ==========================
+app.post("/contact", async (req, res) => {
+  const { name, email, message } = req.body;
+
+  // Basic validation
+  if (!name || !email || !message) {
+    return res.render("contact", {
+      errorMessage: "All fields are required."
+    });
+  }
+
+  const contact = new Contact();
+  contact.name = name;
+  contact.email = email;
+  contact.message = message;
+
+  const saved = await contact.save();
+
+  if (!saved) {
+    return res.render("contact", {
+      errorMessage: "Failed to send message. Please try again."
+    });
+  }
+
+  res.render("contact", {
+    successMessage: "Thank you! Your message has been sent."
+  });
+});
+
 
 // ==========================
 // Server

@@ -24,6 +24,12 @@ block content
 
   section.reviews
     h2 Send a Message
+    if errorMessage
+      .alert-error= errorMessage
+
+    if successMessage
+      .alert-success= successMessage
+
     form.contact-form(action="/contact", method="post")
       .form-row
         label(for="name") Name
