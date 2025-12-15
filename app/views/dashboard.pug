@@ -93,5 +93,6 @@ block content
                 span.status-pill(class=`status-${item.status}`)= item.status
               td
                 a.btn-ghost(href=`/inventory/update/${item.id}`) Edit
+                a.btn-ghost(href=`/inventory/delete/${item.id}`) Delete
     else
       p.no-data No items found yet. Seed the inventory table to see activity.

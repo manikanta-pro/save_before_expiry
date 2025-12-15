@@ -1,0 +1,27 @@
+extends dashboard-layout
+
+block content
+  section.auth-page
+    .auth-card
+      .auth-header
+        h2 Delete Inventory Item
+        p This action cannot be undone
+
+      .alert-error
+        strong Warning:
+        |  You are about to permanently delete this item.
+
+      ul
+        li
+          strong Product:
+          |  #{item.product_name}
+        li
+          strong Location:
+          |  #{item.location}
+        li
+          strong Expiry:
+          |  #{item.expiry_date}
+
+      form(action=`/inventory/delete/${item.id}`, method="post")
+        button.btn-primary.btn-full(type="submit") Yes, Delete Item
+        a.btn-ghost.btn-full(href="/dashboard") Cancel

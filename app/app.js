@@ -428,6 +428,58 @@ app.post("/inventory/update/:id", async (req, res) => {
   }
 });
 
+// ==========================
+// Inventory Delete (GET – confirm page)
+// ==========================
+app.get("/inventory/delete/:id", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect("/login");
+  }
+
+  const itemId = parseInt(req.params.id, 10);
+  if (isNaN(itemId)) {
+    return res.redirect("/dashboard");
+  }
+
+  try {
+    const item = await Inventory.getItemById(itemId);
+    if (!item) {
+      return res.redirect("/dashboard");
+    }
+
+    res.render("inventory-delete", {
+      title: "Delete Inventory Item",
+      item
+    });
+  } catch (err) {
+    console.error("Inventory delete GET error:", err);
+    res.redirect("/dashboard");
+  }
+});
+
+// ==========================
+// Inventory Delete (POST)
+// ==========================
+app.post("/inventory/delete/:id", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect("/login");
+  }
+
+  const itemId = parseInt(req.params.id, 10);
+  if (isNaN(itemId)) {
+    return res.redirect("/dashboard");
+  }
+
+  try {
+    await Inventory.deleteItem(itemId);
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.error("Inventory delete POST error:", err);
+    res.redirect("/dashboard");
+  }
+});
+
+
 
 // Start server on port 3000
 app.listen(3000,function(){
