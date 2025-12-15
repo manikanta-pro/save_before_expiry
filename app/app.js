@@ -3,7 +3,6 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const { User } = require("./models/user");
-const db = require('./services/db');
 const bcrypt = require("bcryptjs");
 
 // Create express app
@@ -41,12 +40,14 @@ app.get("/", (req, res) => {
     res.render("login", { loggedIn: req.session.loggedIn });
   }
 });
-// Create a route for root - /
-app.get("/", function(req, res) {
-    
-});
+
 app.get("/login", (req, res) => res.render("login"));
 app.get("/signup", (req, res) => res.render("signup"));
+
+// Home page
+app.get("/home", function(req, res) {
+    res.render("home", { title: "Home" });
+});
 // About page
 app.get("/about", function(req, res) {
     res.render("about", { title: "About" });
@@ -70,14 +71,14 @@ app.post("/set-password", async (req, res) => {
     const uId = await user.getIdFromEmail();
     if (uId) {
       await user.setUserPassword(password);
-      res.render("register", { successMessage: "Password updated", loggedIn: req.session.loggedIn });
+      res.render("signup", { successMessage: "Password updated", loggedIn: req.session.loggedIn });
     } else {
       const newId = await user.addUser(password);
-      res.render("register", { successMessage: "Account created", loggedIn: req.session.loggedIn });
+      res.render("signup", { successMessage: "Account created", loggedIn: req.session.loggedIn });
     }
   } catch (err) {
     console.error("Error in set-password:", err.message);
-    res.render("register", { errorMessage: "An error occurred", loggedIn: req.session.loggedIn });
+    res.render("signup", { errorMessage: "An error occurred", loggedIn: req.session.loggedIn });
   }
 });
 

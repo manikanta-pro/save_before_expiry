@@ -1,28 +1,29 @@
 extends layout
 
 block content
-  section.auth-section
-    .auth-container
-      h2 Create an Account
-      p.subtitle Join us and start saving food before it expires.
+  section.auth-page
+    .auth-card
+      .auth-header
+        h2 Create Account
+        p Join us and help reduce food waste
 
       if errorMessage
-        p.error-msg= errorMessage
+        .alert-error= errorMessage
 
       if successMessage
-        p.success-msg= successMessage
+        .alert-success= successMessage
 
       form.auth-form(action="/set-password", method="post")
-        .form-group
+        .input-group
           label(for="businessName") Business Name
           input#businessName(
             type="text",
             name="businessName",
-            placeholder="Store or Business name"
+            placeholder="Store or business name"
           )
 
         .form-row
-          .form-group
+          .input-group
             label(for="forename") First Name
             input#forename(
               type="text",
@@ -31,7 +32,7 @@ block content
               required
             )
 
-          .form-group
+          .input-group
             label(for="surname") Last Name
             input#surname(
               type="text",
@@ -40,7 +41,7 @@ block content
               required
             )
 
-        .form-group
+        .input-group
           label(for="email") Email Address
           input#email(
             type="email",
@@ -49,7 +50,7 @@ block content
             required
           )
 
-        .form-group
+        .input-group
           label(for="contactNumber") Contact Number
           input#contactNumber(
             type="text",
@@ -57,7 +58,7 @@ block content
             placeholder="+44 7xxxxxxx"
           )
 
-        .form-group
+        .input-group
           label(for="password") Password
           input#password(
             type="password",
@@ -66,8 +67,8 @@ block content
             required
           )
 
-        button.btn-primary(type="submit") Sign Up
+        button.btn-primary.btn-full(type="submit") Sign Up
 
-      p.auth-footer
-        | Already have an account?
-        a(href="/login")  Login here
+      .auth-footer
+        span Already have an account?
+        a(href="/login") Login here

@@ -1,17 +1,18 @@
 extends layout
 
 block content
-  section.auth-section
-    .auth-container
-      h2 Login to Your Account
-      p.subtitle Access your dashboard and manage near-expiry deals.
+  section.auth-page
+    .auth-card
+      .auth-header
+        h2 Welcome Back
+        p Login to continue saving food before expiry
 
       if errorMessage
-        p.error-msg= errorMessage
+        .alert-error= errorMessage
 
       form.auth-form(action="/authenticate", method="post")
-        .form-group
-          label(for="email") Email Address
+        .input-group
+          label(for="email") Email
           input#email(
             type="email",
             name="email",
@@ -19,17 +20,17 @@ block content
             required
           )
 
-        .form-group
+        .input-group
           label(for="password") Password
           input#password(
             type="password",
             name="password",
-            placeholder="Enter your password",
+            placeholder="••••••••",
             required
           )
 
-        button.btn-primary(type="submit") Login
+        button.btn-primary.btn-full(type="submit") Login
 
-      p.auth-footer
-        | Don’t have an account?
-        a(href="/signup")  Create one
+      .auth-footer
+        span Don’t have an account?
+        a(href="/signup") Create account
