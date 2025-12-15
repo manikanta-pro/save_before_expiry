@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const { User } = require("./models/user");
+const { Inventory } = require("./models/inventory");
 const bcrypt = require("bcryptjs");
 
 // Create express app
@@ -314,6 +315,45 @@ app.get("/hello/:name", function(req, res) {
     console.log(req.params);
     //  Retrieve the 'name' parameter and use it in a dynamically generated page
     res.send("Hello " + req.params.name);
+});
+
+
+/**
+ * CREATE inventory item
+ * Same flow as user authentication:
+ * form → model → redirect
+ */
+app.post("/inventory/create", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect("/login");
+  }
+
+  const item = new Inventory();
+
+  item.product_name = req.body.product_name;
+  item.category = req.body.category;
+  item.location = req.body.location;
+  item.expiry_date = req.body.expiry_date;
+  item.quantity = req.body.quantity;
+  item.original_price = req.body.original_price;
+  item.discount_percent = req.body.discount_percent;
+
+  try {
+    const id = await item.addItem();
+
+    if (id) {
+      res.redirect("/dashboard");
+    } else {
+      res.render("inventory-create", {
+        errorMessage: "Failed to create inventory item"
+      });
+    }
+  } catch (err) {
+    console.error("Inventory create error:", err);
+    res.render("inventory-create", {
+      errorMessage: "Something went wrong"
+    });
+  }
 });
 
 // Start server on port 3000
