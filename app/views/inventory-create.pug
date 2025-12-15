@@ -1,0 +1,39 @@
+extends dashboard-layout
+
+block content
+  section.auth-page
+    .auth-card
+      .auth-header
+        h2 Create Inventory Item
+        p Add a new near-expiry product
+
+      form.auth-form(action="/inventory/create", method="post")
+        .input-group
+          label Product Name
+          input(type="text", name="product_name", required)
+
+        .input-group
+          label Category
+          input(type="text", name="category")
+
+        .input-group
+          label Location
+          input(type="text", name="location")
+
+        .input-group
+          label Expiry Date
+          input(type="date", name="expiry_date", required)
+
+        .input-group
+          label Quantity
+          input(type="number", name="quantity", min="1", required)
+
+        .input-group
+          label Original Price (£)
+          input(type="number", step="0.01", name="original_price", required)
+
+        .input-group
+          label Discount (%)
+          input(type="number", step="1", name="discount_percent", required)
+
+        button.btn-primary.btn-full(type="submit") Create Item

@@ -277,6 +277,13 @@ app.get("/products/:id", async function(req, res) {
     }
 });
 
+app.get("/inventory/create", (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect("/login");
+  }
+  res.render("inventory-create", { title: "Create Inventory Item" });
+});
+ 
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database
