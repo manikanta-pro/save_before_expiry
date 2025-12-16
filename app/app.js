@@ -303,6 +303,120 @@ app.post("/contact", async (req, res) => {
   });
 });
 
+// ==========================
+// PUBLIC DASHBOARD (CONSUMER)
+// ==========================
+app.get("/deals", async (req, res) => {
+  const { search = "", category = "" } = req.query;
+
+  const filters = [
+    "status = 'available'",
+    "expiry_date >= CURDATE()"
+  ];
+  const params = [];
+
+  if (search) {
+    filters.push("(product_name LIKE ? OR location LIKE ?)");
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  if (category) {
+    filters.push("category = ?");
+    params.push(category);
+  }
+
+  const whereClause = `WHERE ${filters.join(" AND ")}`;
+
+  const sql = `
+    SELECT
+      id,
+      product_name,
+      category,
+      location,
+      DATE_FORMAT(expiry_date,'%Y-%m-%d') AS expiry_date,
+      quantity,
+      original_price,
+      ROUND(original_price * (1 - discount_percent/100), 2) AS discounted_price,
+      discount_percent
+    FROM inventory_items
+    ${whereClause}
+    ORDER BY expiry_date ASC
+  `;
+
+  const categoriesSql = `
+    SELECT DISTINCT category
+    FROM inventory_items
+    WHERE status='available' AND expiry_date >= CURDATE()
+  `;
+
+  const [items, categories] = await Promise.all([
+    db.query(sql, params),
+    db.query(categoriesSql)
+  ]);
+
+  res.render("public-dashboard", {
+    title: "Nearby Deals",
+    items,
+    categories,
+    filters: { search, category }
+  });
+});
+
+// ==========================
+// PUBLIC PRODUCT DETAILS
+// ==========================
+app.get("/products/:id", async (req, res) => {
+  try {
+    const sql = `
+      SELECT
+        *,
+        DATEDIFF(expiry_date, CURDATE()) AS days_to_expiry,
+        ROUND(original_price * (1 - discount_percent/100), 2) AS discounted_price
+      FROM inventory_items
+      WHERE id = ?
+        AND status = 'available'
+        AND expiry_date >= CURDATE()
+    `;
+
+    const result = await db.query(sql, [req.params.id]);
+
+    if (!result.length) {
+      return res.redirect("/deals");
+    }
+
+    const product = result[0];
+
+    // Recommended items (same category)
+    const recommendedItems = await db.query(
+      `
+      SELECT
+        id,
+        product_name,
+        expiry_date,
+        ROUND(original_price * (1 - discount_percent/100), 2) AS discounted_price,
+        discount_percent,
+        status
+      FROM inventory_items
+      WHERE category = ?
+        AND id != ?
+        AND status = 'available'
+        AND expiry_date >= CURDATE()
+      LIMIT 4
+      `,
+      [product.category, product.id]
+    );
+
+    res.render("product-detail", {
+      title: product.product_name,
+      product,
+      recommendedItems
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect("/deals");
+  }
+});
+
 
 // ==========================
 // Server

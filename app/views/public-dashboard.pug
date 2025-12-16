@@ -1,0 +1,68 @@
+extends layout
+
+block content
+  section.dashboard-hero
+    .hero-text
+      h2 Nearby Near-Expiry Deals
+      p Browse discounted items available close to you.
+    .hero-highlight
+      span.label Total Deals
+      span.value #{items.length}
+
+  section.filters
+    form.filter-form(method="get", action="/deals")
+      .filter-group
+        label(for="search") Search
+        input#search(
+          type="text",
+          name="search",
+          placeholder="Product or location",
+          value=(filters && filters.search) || ""
+        )
+
+      .filter-group
+        label(for="category") Category
+        select#category(name="category")
+          option(value="") All categories
+          if categories && categories.length
+            each cat in categories
+              option(
+                value=cat.category
+                selected=(filters && filters.category === cat.category)
+              )= cat.category
+
+      button.btn-primary(type="submit") Apply
+      if filters && (filters.search || filters.category)
+        a.btn-ghost(href="/deals") Clear
+
+  section.table-section
+    h2 Available Deals
+    if items && items.length
+      table.data-table
+        thead
+          tr
+            th Product
+            th Category
+            th Location
+            th Expiry
+            th Original
+            th Discounted
+            th Discount
+            th Action
+        tbody
+          each item in items
+            tr
+              td
+                strong= item.product_name
+              td= item.category || "—"
+              td= item.location
+              td= item.expiry_date
+              td £#{item.original_price}
+              td £#{item.discounted_price}
+              td #{item.discount_percent}%
+              td
+                a.btn-ghost(
+                  href=`/products/${item.id}`
+                ) View
+    else
+      p.no-data No deals available right now. Please check again later.
