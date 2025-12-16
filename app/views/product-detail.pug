@@ -38,6 +38,12 @@ block content
         p.helper Reserve now and pick up before closing time.
         .cta-row
           a.btn-ghost(href="/deals") Back to deals
+          a.btn-primary(
+              href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(product.location)}`
+              target="_blank"
+            )
+          | Get Directions
+
       ul.freshness-points
         li Ready for pickup within 2 hours of reservation.
         li Temperature-controlled holding for chilled items.
